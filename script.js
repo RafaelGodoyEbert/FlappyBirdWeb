@@ -195,3 +195,5 @@ window.addEventListener('click', function(){
 mudaParaTela(Telas.INICIO);
 
 loop();
+
+//aaaaaaaaaaaaaaaaaaaaaaaaaaaa
