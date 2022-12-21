@@ -190,7 +190,7 @@ function criaCanos() {
         desenhar() {
         canos.pares.forEach(function(par){
                 const yRandom = par.y;
-                const espacamentoEntreCanos = 90;
+                const espacamentoEntreCanos = 290;
     
                 const canoCeuX = par.x;
                 const canoCeuY = yRandom;
@@ -218,8 +218,8 @@ function criaCanos() {
                     y: canos.altura + canoCeuY
                 }
                 par.canoChao = {
-                    y: canoCeuX,
-                    y: canoCeuY
+                    y: canoChaoX,
+                    y: canoChaoY
                 }
             })
         },
@@ -227,11 +227,11 @@ function criaCanos() {
             const cabecaDoFlappy = globais.flappyBird.y;
             const peDoFlappy = globais.flappyBird.y + globais.flappyBird.altura;
 
-            if((globais.flappyBird.x + globais.flappyBird.largura) >= par.x){
+            if((globais.flappyBird.x + globais.flappyBird.largura) >= par.x) {
                 if(cabecaDoFlappy <= par.canoCeu.y) {
                     return true;
                 }
-                if(peDoFlappy >= par.canoCeu.x){
+                if(peDoFlappy >= par.canoChao.y){
                     return true;
                 }
             }
@@ -241,8 +241,7 @@ function criaCanos() {
         atualiza(){
             const passou100Frames = frames % 100 === 0;
             if(passou100Frames){
-                canos.pares.push(
-                    {
+                canos.pares.push({
                         x: canvas.width,
                         y: -150 * (Math.random() + 1),
                     });
