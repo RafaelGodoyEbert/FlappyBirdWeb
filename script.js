@@ -1,3 +1,4 @@
+let frames = 0;
 const  SFX_hit = new Audio();
 SFX_hit.src = './SFX/hit.wav';
 
@@ -48,10 +49,31 @@ function criarFlappyBird(){
             flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade;
             flappyBird.y = flappyBird.y + flappyBird.velocidade;
         },
+        movimentos: [
+            { spriteX: 0, spriteY: 0, }, // asa pra cima
+            { spriteX: 0, spriteY: 26, }, // asa no meio 
+            { spriteX: 0, spriteY: 52, }, // asa pra baixo
+            { spriteX: 0, spriteY: 26, }, // asa no meio 
+        ],
+        frameAtual: 0,
+        atualizarOFrameAtual(){
+            const intervaloDeFrames = 10;
+            const passouOIntervalo = frames % intervaloDeFrames === 0;
+            // console.log('passouOIntervalo', passouOIntervalo)
+      
+            if(passouOIntervalo) {
+              const baseDoIncremento = 1;
+              const incremento = baseDoIncremento + flappyBird.frameAtual;
+              const baseRepeticao = flappyBird.movimentos.length;
+              flappyBird.frameAtual = incremento % baseRepeticao
+            }
+        },
         desenhar() {
+            flappyBird.atualizarOFrameAtual();
+            const { spriteX, spriteY } = this.movimentos[flappyBird.frameAtual];
             contexto.drawImage(
                 sprites,
-                flappyBird.spriteX, flappyBird.spriteY, 
+                spriteX, spriteY, 
                 flappyBird.largura, flappyBird.altura, 
                 flappyBird.x, flappyBird.y, 
                 flappyBird.largura, flappyBird.altura,
@@ -92,30 +114,45 @@ const planoDeFundo = {
 };
 
 //Chão
-const chao = {
-    spriteX: 0, //Sprite X, Sprite Y
-    spriteY: 610,
-    largura: 224, //Tamanho do recorte na sprite
-    altura: 112,
-    x: 0, //Local onde vai ficar no meu canvas
-    y: canvas.height - 112,
-    desenhar() {
-        contexto.drawImage(
-            sprites,
-            chao.spriteX, chao.spriteY, 
-            chao.largura, chao.altura, 
-            chao.x, chao.y, 
-            chao.largura, chao.altura,
-            );
-        contexto.drawImage(
-            sprites,
-            chao.spriteX, chao.spriteY, 
-            chao.largura, chao.altura, 
-            (chao.x + chao.largura), chao.y,
-            chao.largura, chao.altura,
-            );    
-    }
+function criaChao() {
+    const chao = {
+        spriteX: 0, //Sprite X, Sprite Y
+        spriteY: 610,
+        largura: 224, //Tamanho do recorte na sprite
+        altura: 112,
+        x: 0, //Local onde vai ficar no meu canvas
+        y: canvas.height - 112, 
+        atualiza(){
+            const movimentoDoChao = 1;
+            const repeteEm = chao.largura / 2;
+            const movimentacao = chao.x - movimentoDoChao;
+
+            // console.log('[chao.x]', chao.x);
+            // console.log('[repeteEm]',repeteEm);
+            // console.log('[movimentacao]', movimentacao % repeteEm);
+
+            chao.x = movimentacao % repeteEm;
+        },
+        desenhar() {
+            contexto.drawImage(
+                sprites,
+                chao.spriteX, chao.spriteY, 
+                chao.largura, chao.altura, 
+                chao.x, chao.y, 
+                chao.largura, chao.altura,
+                );
+            contexto.drawImage(
+                sprites,
+                chao.spriteX, chao.spriteY, 
+                chao.largura, chao.altura, 
+                (chao.x + chao.largura), chao.y,
+                chao.largura, chao.altura,
+                );    
+        },
+    };
+    return chao;
 };
+
 
 //Menu
 const mensagemGetReady = {
@@ -151,10 +188,11 @@ const Telas = {
     INICIO: {
         inicializa(){
             globais.flappyBird = criarFlappyBird();
+            globais.chao = criaChao();
         },
         desenha(){            
             planoDeFundo.desenhar();
-            chao.desenhar();
+            globais.chao.desenhar();
             globais.flappyBird.desenhar();
             mensagemGetReady.desenha();
         },
@@ -162,13 +200,14 @@ const Telas = {
             mudaParaTela(Telas.JOGO);
         },
         atualiza(){
+            globais.chao.atualiza();
         }
     }
 };
 Telas.JOGO = {
     desenha() {       
         planoDeFundo.desenhar();
-        chao.desenhar();
+        globais.chao.desenhar();
         globais.flappyBird.desenhar();
     },
     click(){
@@ -183,6 +222,7 @@ Telas.JOGO = {
 function loop() {
     telaAtiva.desenha();
     telaAtiva.atualiza();
+    frames = frames + 1;
     requestAnimationFrame(loop);
 };
 
@@ -195,5 +235,3 @@ window.addEventListener('click', function(){
 mudaParaTela(Telas.INICIO);
 
 loop();
-
-//aaaaaaaaaaaaaaaaaaaaaaaaaaaa
