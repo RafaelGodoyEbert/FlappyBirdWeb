@@ -38,10 +38,6 @@ Ao trabalhar neste projeto, as habilidades que podem ser objetivadas incluem:
 
 Contribuições são bem-vindas! Se você tiver sugestões, melhorias ou correções de bugs, fique à vontade para abrir uma issue ou enviar um pull request.
 
-## Licença
-
-Este projeto está licenciado sob a [MIT License](https://github.com/RafaelGodoyEbert/FlappyBirdWeb/blob/main/LICENSE).
-
 ## Contato
 
 Se você tiver alguma dúvida ou quiser entrar em contato, pode me encontrar através do meu [perfil do GitHub](https://github.com/RafaelGodoyEbert).
